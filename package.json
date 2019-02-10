@@ -4,6 +4,7 @@
   "description": "",
   "main": "./dist/app.js",
   "dependencies": {
+    "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "superagent": "^4.1.0",
     "url": "^0.11.0"
