@@ -1,5 +1,5 @@
 import { candlesMinutes
-} from '../upbit/candles';
+} from '../upbit/quotation';
 
 describe('Upbit API candles', () => {
 

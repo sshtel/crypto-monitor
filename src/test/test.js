@@ -1,7 +1,7 @@
-const candlesMinutes = require('../../dist/upbit/candles').candlesMinutes;
-const candlesDays = require('../../dist/upbit/candles').candlesDays;
-const candlesWeeks = require('../../dist/upbit/candles').candlesWeeks;
-const candlesMonths = require('../../dist/upbit/candles').candlesMonths;
+const candlesMinutes = require('../../dist/upbit/quotation').candlesMinutes;
+const candlesDays = require('../../dist/upbit/quotation').candlesDays;
+const candlesWeeks = require('../../dist/upbit/quotation').candlesWeeks;
+const candlesMonths = require('../../dist/upbit/quotation').candlesMonths;
 
 candlesMinutes({unit: 1, market: 'KRW-BTC', count: 2}).then( (value) => {
   console.log('resolve');
