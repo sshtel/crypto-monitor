@@ -11,6 +11,16 @@ const app = express();
 const upbit = new Upbit();
 const upbitCron = new UpbitCron();
 
+let candlesMinutes = {};
+upbitCron.on('candlesMinutes', value => {
+  candlesMinutes = JSON.stringify(value, null, 2);
+});
+
+let orderBook = {};
+upbitCron.on('orderBook', value => {
+  orderBook = JSON.stringify(value, null, 2);
+});
+
 console.log(upbit.getAccessToken());
 console.log(upbit.getSecretToken());
 // const query = querystring.queryEncode({/* 요청할 파라미터 */});
@@ -39,7 +49,13 @@ app.get('/accounts', async (req, res) => {
 });
 
 app.get('/order-book', async (req, res) => {
-  res.send(upbitCron.getOrderBook());
+  // res.send(upbitCron.getOrderBook());
+  res.send(orderBook);
+});
+
+app.get('/candles-minutes', async (req, res) => {
+  // res.send(upbitCron.getOrderBook());
+  res.send(candlesMinutes);
 });
 
 const PORT = process.env.PORT || 8080;
