@@ -20,7 +20,6 @@ export async function candlesMinutes(param: {unit: number, market: string, count
     hostname: constant.UPBIT_URL_V1,
     pathname: `${constant.UPBIT_URL_CANDLES_MINUTE}/${unit}`
   });
-  console.log(uri);
   const res = await request.get(uri)
     .query({ market })
     .query({ count })
