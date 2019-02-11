@@ -66,16 +66,59 @@ function local() {
   });
 }
 
-function jasmineWatchTask(name) {
-  var buildAndTest = 'run-' + name;
-  gulp.task(name, [buildAndTest], function () {
-    gulp.watch(sources, [buildAndTest]);
-  });
-  gulp.task(buildAndTest, ['build'], function () {
-    gulp.src('./dist/spec/' + name + '.js')
-      .pipe(jasmine());
-  });
+function test(fileName = '*[Ss]pec', specPath = './dist/spec/') {
+  return function testJasmine() {
+    const jasmine = require('gulp-jasmine');
+    const SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+    const glob = require('glob');
+
+    // for (const key in options.envContents) {
+    //   if (process.env[key] !== undefined) continue;
+    //   const value = options.envContents[key];
+    //   process.env[key] = value;
+    // }
+
+    const pattern = `${specPath}${fileName}.js`;
+    const files = glob.sync(pattern);
+    if (files.length === 0) {
+      console.warn(`There is no .spec files.\nTest step ignored.\nPattern: ${pattern}`);
+      return gulp.src('empty', { allowEmpty: true });
+    }
+
+    return gulp.src(files)
+      .pipe(jasmine({
+        // verbose: true,
+        includeStackTrace: true,
+        reporter: new SpecReporter({  // add jasmine-spec-reporter
+          spec: {
+            displayPending: true
+          }
+        }),
+        config: {
+          random: false
+        }
+      }));
+  }
 }
+
+
+// function jasmineWatchTask(name) {
+//   var buildAndTest = 'run-' + name;
+//   gulp.task(name, () => {
+//     gulp.watch(sources, { ignoreInitial: false }, gulp.series('compile', test(name)));
+//   });
+//   gulp.task(buildAndTest, () => {
+//     gulp.src('./dist/spec/' + name + '.js')
+//       .pipe(jasmine());
+//   });
+//   // gulp.task(name, [buildAndTest], function () {
+//   //   gulp.watch(sources, [buildAndTest]);
+//   // });
+//   // gulp.task(buildAndTest, ['build'], function () {
+//   //   gulp.src('./dist/spec/' + name + '.js')
+//   //     .pipe(jasmine());
+//   // });
+// }
 
 function lint() {
   if (process.env.npm_lifecycle_event === 'test') return;
@@ -88,19 +131,34 @@ function lint() {
       }));
 }
 
+
 gulp.task('clean', clean);
-gulp.task('build', ['tslint'], compileTypescript);
+gulp.task('tslint', lint);
+gulp.task('build', gulp.series('tslint', compileTypescript));
 gulp.task('watch', watch);
 gulp.task('kill', kill);
 gulp.task('start', start);
 gulp.task('debug', debug);
-gulp.task('local', ['watch'], local);
-gulp.task('tslint', lint);
+gulp.task('local', gulp.series('watch', local));
+gulp.task('test', gulp.series(test()));
+
+// (function registerJasmineTasks() {
+//   var files = require('glob').sync('./dist/spec/*.js');
+//   files.forEach(function (name) {
+//     var taskName = name.match(/^.*\/(.*)\.js$/)[1];
+//     jasmineWatchTask(taskName);
+//   });
+// })();
 
 (function registerJasmineTasks() {
-  var files = require('glob').sync('./dist/spec/*.js');
+  const specPath = './dist/spec/';
+  const glob = require('glob');
+  const files = glob.sync(`${specPath}*.js`);
   files.forEach(function (name) {
-    var taskName = name.match(/^.*\/(.*)\.js$/)[1];
-    jasmineWatchTask(taskName);
+    // ./dist/spec/abc.spec.js => abc.spec
+    const taskName = name.match(/^.*\/(.*)\.js$/)[1];
+    gulp.task(taskName, function watchTypescriptsforSpec(done) {
+      gulp.watch(options.sources, { ignoreInitial: false }, gulp.series('compile', test(taskName)));
+    });
   });
 })();
