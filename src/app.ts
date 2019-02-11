@@ -13,12 +13,12 @@ const upbitCron = new UpbitCron();
 
 let candlesMinutes = {};
 upbitCron.on('candlesMinutes', value => {
-  candlesMinutes = JSON.stringify(value, null, 2);
+  candlesMinutes = value;
 });
 
 let orderBook = {};
 upbitCron.on('orderBook', value => {
-  orderBook = JSON.stringify(value, null, 2);
+  orderBook = value;
 });
 
 console.log(upbit.getAccessToken());
@@ -50,12 +50,14 @@ app.get('/accounts', async (req, res) => {
 
 app.get('/order-book', async (req, res) => {
   // res.send(upbitCron.getOrderBook());
-  res.send(orderBook);
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+  .status(200).send(JSON.stringify(orderBook, undefined, ' '));
 });
 
 app.get('/candles-minutes', async (req, res) => {
   // res.send(upbitCron.getOrderBook());
-  res.send(candlesMinutes);
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+  .status(200).send(JSON.stringify(candlesMinutes, undefined, ' '));
 });
 
 const PORT = process.env.PORT || 8080;

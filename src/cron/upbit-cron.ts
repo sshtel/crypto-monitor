@@ -22,7 +22,7 @@ export class UpbitCron extends EventEmitter {
   public getOrderBook() { return this.orderBook; }
   async cronOrderBook() {
     if (this.upbit) {
-      this.orderBook = await this.upbit.orderBook({markets: 'KRW-BTC'});
+      this.orderBook = await this.upbit.orderBook({markets: 'KRW-BTC,KRW-ETH,KRW-XRP'});
       this.emit('orderBook', this.orderBook);
     }
     setTimeout( this.cronOrderBook, 1000);
