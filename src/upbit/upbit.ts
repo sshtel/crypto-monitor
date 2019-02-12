@@ -1,13 +1,16 @@
 
 import * as fs from 'fs';
-import { Auth } from './auth';
+// import { Auth } from './auth';
+import { constant } from './constant';
+import * as exchange from './exchange';
+import { OrderState } from './interface';
 import * as quotation from './quotation';
+
 export class Upbit {
 
-  private auth: Auth;
+  // private auth: Auth;
   private marketList = [];
   constructor() {
-    this.auth = new Auth();
   }
 
   public async updateMarketAll() {
@@ -20,15 +23,16 @@ export class Upbit {
     }
   }
 
-  public setAuth(accessToken: string, secretToken: string) {
-    this.auth = new Auth();
+  public setAuth(accessKey: string, secretKey: string) {
+    constant.UPBIT_ACCESS_KEY = accessKey;
+    constant.UPBIT_SECRET_KEY = secretKey;
   }
 
   public getAccessToken() {
-    return this.auth.getTokens().accessToken;
+    return constant.UPBIT_ACCESS_KEY;
   }
   public getSecretToken() {
-    return this.auth.getTokens().secretToken;
+    return constant.UPBIT_SECRET_KEY;
   }
 
   public getMarketList() {
@@ -59,5 +63,23 @@ export class Upbit {
   }
   public async orderBook(param: {markets: string}) {
     return quotation.orderBook(param);
+  }
+
+  // exchange
+  public async getAccounts() {
+    return exchange.getAccounts();
+  }
+  public async getOrdersChance(market: string) {
+    return exchange.getOrdersChance(market);
+  }
+  public async getOrder(uuid?: string, identifier?: string) {
+    return exchange.getOrder(uuid, identifier);
+  }
+  public async getOrders(market: string, state?: OrderState, page?: number, orderBy?: string) {
+    return exchange.getOrders(market, 'wait', 1);
+  }
+
+  public async postOrder(market: string, side: string, volume: string, price: string, ordType: string) {
+    return exchange.postOrders(market, side, volume, price, ordType);
   }
 }

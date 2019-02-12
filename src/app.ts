@@ -1,7 +1,7 @@
 import * as express from 'express';
 
-import * as jwt from 'jsonwebtoken';
-import * as request from 'superagent';
+// import * as jwt from 'jsonwebtoken';
+// import * as request from 'superagent';
 // import * as querystring from 'querystring';
 import { UpbitCron } from './cron/upbit-cron';
 import { Upbit } from './upbit/upbit';
@@ -35,27 +35,38 @@ app.get('/market-all', async (req, res) => {
 });
 
 app.get('/accounts', async (req, res) => {
-  const payload = {access_key: upbit.getAccessToken(), nonce: (new Date).getTime()};
-  const jwtToken = jwt.sign(payload, upbit.getSecretToken() as string);
-  const authorizationToken = `Bearer ${jwtToken}`;
+  const result = await upbit.getAccounts();
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+  .status(200).send(JSON.stringify(result, undefined, ' '));
+});
+app.get('/orders-chance', async (req, res) => {
+  const result = await upbit.getOrdersChance('KRW-BTC');
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+  .status(200).send(JSON.stringify(result, undefined, ' '));
+});
+app.get('/order', async (req, res) => {
+  const result = await upbit.getOrder();
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+    .status(200).send(JSON.stringify(result, undefined, ' '));
+});
+app.get('/orders', async (req, res) => {
+  const result = await upbit.getOrders('KRW-XRP');
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+    .status(200).send(JSON.stringify(result, undefined, ' '));
+});
 
-  request
-  .get('https://api.upbit.com/v1/accounts')
-  .set('Authorization', authorizationToken)
-  .then(response => {
-    res.send(response.body);
-  });
-
+app.get('/post-order', async (req, res) => {
+  const result = await upbit.postOrder('KRW-VTC', 'bid', '2', '300', 'limit');
+  res.set({'Content-Type': 'application/json; charset=utf-8'})
+    .status(200).send(JSON.stringify(result, undefined, ' '));
 });
 
 app.get('/order-book', async (req, res) => {
-  // res.send(upbitCron.getOrderBook());
   res.set({'Content-Type': 'application/json; charset=utf-8'})
   .status(200).send(JSON.stringify(orderBook, undefined, ' '));
 });
 
 app.get('/candles-minutes', async (req, res) => {
-  // res.send(upbitCron.getOrderBook());
   res.set({'Content-Type': 'application/json; charset=utf-8'})
   .status(200).send(JSON.stringify(candlesMinutes, undefined, ' '));
 });

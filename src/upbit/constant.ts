@@ -1,9 +1,16 @@
 
 export class Constant {
 
-  public UPBIT_ACCESS_TOKEN: string | undefined = '';
-  public UPBIT_SECRET_TOKEN: string | undefined = '';
+  public static GetConstant() {
+    if (!this.constant) this.constant = new Constant();
+    return this.constant;
+  }
+  private static constant: Constant | undefined = undefined;
 
+  public UPBIT_ACCESS_KEY: string | undefined = '';
+  public UPBIT_SECRET_KEY: string | undefined = '';
+
+  // quotation API
   public UPBIT_URL_V1: string                 = 'api.upbit.com/v1';
   public UPBIT_URL_MARKET_ALL: string         = 'market/all';
   public UPBIT_URL_CANDLES_MINUTE: string     = 'candles/minutes';
@@ -14,11 +21,31 @@ export class Constant {
   public UPBIT_URL_TICKER: string             = 'ticker';
   public UPBIT_URL_ORDERBOOK: string          = 'orderbook';
 
-  constructor() {
-    this.UPBIT_ACCESS_TOKEN = process.env.UPBIT_ACCESS_TOKEN;
-    this.UPBIT_SECRET_TOKEN = process.env.UPBIT_SECRET_TOKEN;
+  // exchange API
+  public UPBIT_URL_ACCOUNTS: string           = 'accounts';
+  public UPBIT_URL_ORDERS_CHANCE: string      = 'orders/chance';
+  public UPBIT_URL_ORDER: string              = 'order';
+  public UPBIT_URL_ORDERS: string             = 'orders';
+
+  public UPBIT_URL_WITHRAWS: string           = 'withdraws';
+  public UPBIT_URL_WITHRAW: string            = 'withdraw';
+  public UPBIT_URL_WITHRAWS_CHANCE            = 'withdraws/chance';
+  public UPBIT_URL_WITHRAWS_COIN              = 'withdraws/coin';
+  public UPBIT_URL_WITHRAWS_KRW               = 'withdraws/krw';
+
+  public UPBIT_URL_DEPOSITS                   = 'deposits';
+  public UPBIT_URL_DEPOSIT                    = 'deposit';
+  public UPBIT_URL_DEPOSITS_GENERATE_COIN_ADDRESS = 'deposits/generate_coin_address';
+  public UPBIT_URL_DEPOSITS_COIN_ADDRESSES    = 'deposits/coin_addresses';
+  public UPBIT_URL_DEPOSITS_COIN_ADDRESS      = 'deposits/coin_address';
+
+  private constructor() {
+    this.UPBIT_ACCESS_KEY = process.env.UPBIT_ACCESS_KEY;
+    this.UPBIT_SECRET_KEY = process.env.UPBIT_SECRET_KEY;
+    console.log(process.env.UPBIT_ACCESS_KEY);
+    console.log(process.env.UPBIT_SECRET_KEY);
   }
 
 }
 
-export const constant = new Constant();
+export const constant = Constant.GetConstant();
