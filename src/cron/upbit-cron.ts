@@ -1,5 +1,5 @@
 import * as EventEmitter from 'events';
-import { Upbit } from '../upbit/upbit';
+import { Upbit } from 'upbit-js';
 
 export class UpbitCron extends EventEmitter {
   private upbit: Upbit;

@@ -3,8 +3,8 @@ import * as express from 'express';
 // import * as jwt from 'jsonwebtoken';
 // import * as request from 'superagent';
 // import * as querystring from 'querystring';
+import { Upbit } from 'upbit-js';
 import { UpbitCron } from './cron/upbit-cron';
-import { Upbit } from './upbit/upbit';
 
 const app = express();
 
