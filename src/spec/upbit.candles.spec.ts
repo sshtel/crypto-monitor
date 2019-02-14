@@ -1,21 +1,18 @@
 import * as _ from 'lodash';
-import {
-  candlesDays,
-  candlesMinutes,
-  candlesMonths,
-  candlesWeeks
-} from '../upbit/quotation';
+import { Upbit } from 'upbit-js';
 
 describe('Upbit API candles', () => {
+  const upbit = new Upbit();
 
   beforeEach( (async () => {
+
   }));
 
   it('caldles minutes', (async () => {
     const count = 5;
     const market = 'KRW-BTC';
     const unit = 1;
-    const res = await candlesMinutes({unit, market, count});
+    const res = await upbit.candlesMinutes({unit, market, count});
     expect(res.length).toBe(count);
     expect(_.sample(res).market).toBe(market);
     expect(_.sample(res).unit).toBe(unit);
@@ -24,7 +21,7 @@ describe('Upbit API candles', () => {
   it('caldles days', (async () => {
     const count = 5;
     const market = 'KRW-BTC';
-    const res = await candlesDays({market, count});
+    const res = await upbit.candlesDays({market, count});
     expect(res.length).toBe(count);
     expect(_.sample(res).market).toBe(market);
   }));
@@ -32,7 +29,7 @@ describe('Upbit API candles', () => {
   it('caldles weeks', (async () => {
     const count = 5;
     const market = 'KRW-BTC';
-    const res = await candlesWeeks({market, count});
+    const res = await upbit.candlesWeeks({market, count});
     expect(res.length).toBe(count);
     expect(_.sample(res).market).toBe(market);
   }));
@@ -40,7 +37,7 @@ describe('Upbit API candles', () => {
   it('caldles months', (async () => {
     const count = 5;
     const market = 'KRW-BTC';
-    const res = await candlesMonths({market, count});
+    const res = await upbit.candlesMonths({market, count});
     expect(res.length).toBe(count);
     expect(_.sample(res).market).toBe(market);
   }));
