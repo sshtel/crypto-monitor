@@ -5,6 +5,8 @@ import * as express from 'express';
 // import * as querystring from 'querystring';
 import { Upbit } from 'upbit-js';
 import { UpbitCron } from './cron/upbit-cron';
+import { RoutePublic } from './router/route-public';
+import { RouteUpbit } from './router/route-upbit';
 
 const app = express();
 
@@ -25,53 +27,13 @@ console.log(upbit.getAccessToken());
 console.log(upbit.getSecretToken());
 // const query = querystring.queryEncode({/* 요청할 파라미터 */});
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+RouteUpbit.set(app);
+RoutePublic.set(app);
 
-app.get('/market-all', async (req, res) => {
-  const marketAll = await upbit.marketAll();
-  res.send(marketAll);
-});
-
-app.get('/accounts', async (req, res) => {
-  const result = await upbit.getAccounts();
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-  .status(200).send(JSON.stringify(result, undefined, ' '));
-});
-app.get('/orders-chance', async (req, res) => {
-  const result = await upbit.getOrdersChance('KRW-BTC');
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-  .status(200).send(JSON.stringify(result, undefined, ' '));
-});
-app.get('/order', async (req, res) => {
-  const result = await upbit.getOrder();
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-    .status(200).send(JSON.stringify(result, undefined, ' '));
-});
-app.get('/orders', async (req, res) => {
-  const result = await upbit.getOrders('KRW-XRP');
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-    .status(200).send(JSON.stringify(result, undefined, ' '));
-});
-
-app.get('/post-order', async (req, res) => {
-  const result = await upbit.postOrder('KRW-VTC', 'bid', '2', '300', 'limit');
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-    .status(200).send(JSON.stringify(result, undefined, ' '));
-});
-
-app.get('/order-book', async (req, res) => {
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-  .status(200).send(JSON.stringify(orderBook, undefined, ' '));
-});
-
-app.get('/candles-minutes', async (req, res) => {
-  res.set({'Content-Type': 'application/json; charset=utf-8'})
-  .status(200).send(JSON.stringify(candlesMinutes, undefined, ' '));
-});
+console.log(candlesMinutes);
+console.log(orderBook);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Server listening on port ${PORT}!`);
 });
