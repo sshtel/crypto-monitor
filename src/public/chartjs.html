@@ -1,0 +1,172 @@
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- vue -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+
+
+  <div>
+    <canvas id="btcChart" width="400" height="100"></canvas>
+    <canvas id="xrpChart" width="400" height="100"></canvas>
+  </div>
+
+  <script>
+
+      var btcChart = new Chart(document.getElementById("btcChart"), 
+      { "type": "line",
+        "data": { 
+          "labels": new Array(100),
+          "datasets": [
+            {
+              "label": "BTC trade price",
+              "data": new Array(100),
+              "fill": false,
+              "borderColor": "rgb(255, 0, 0)",
+              borderWidth: 1,
+              "lineTension": 0,
+              pointRadius: 0,
+              pointStyle: 'line'
+            }
+          ]
+        },
+        'options': {
+          'scales': {
+              yAxes: [{
+                  ticks: {
+                      suggestedMin: 4100000,
+                      suggestedMax: 4500000
+                  }
+              }]
+          }
+        }
+      });
+
+      setInterval( function () {
+
+        $.ajax({url: "https://api.upbit.com/v1/candles/minutes/1?market=KRW-BTC",
+          success: function(result){
+            const xrpPrice = result[0].trade_price;
+
+            btcChart.data.labels.shift();
+            btcChart.data.labels.push('');
+            btcChart.data.datasets.forEach( (dataset) => {
+              dataset.data.shift();
+              dataset.data.push(  xrpPrice );
+            });
+            btcChart.update();
+            
+          }
+        });
+
+      }, 1000);
+
+
+      var xrpChart = new Chart(document.getElementById("xrpChart"), 
+      { "type": "line",
+        "data": { 
+          "labels": new Array(100),
+          "datasets": [
+            {
+              "label": "XRP trade price",
+              "data": new Array(100),
+              "fill": false,
+              "borderColor": "rgb(75, 192, 192)",
+              "lineTension": 0,
+              pointRadius: 0,
+              pointStyle: 'line'
+            }
+          ]
+        },
+        options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      // suggestedMin: 370,
+                      // suggestedMax: 320,
+                      max: 370,
+                      min: 320,
+                      stepSize: 5
+                  }
+              }]
+          }
+        }
+      });
+
+      setInterval( function () {
+
+        $.ajax({url: "https://api.upbit.com/v1/candles/minutes/1?market=KRW-XRP",
+          success: function(result){
+            const xrpPrice = result[0].trade_price;
+
+            xrpChart.data.labels.shift();
+            xrpChart.data.labels.push('');
+            xrpChart.data.datasets.forEach( (dataset) => {
+              dataset.data.shift();
+              dataset.data.push(  xrpPrice );
+            });
+            xrpChart.update();
+            
+          }
+        });
+
+      }, 1000);
+
+  </script>
+
+
+
+  <div>
+    <canvas id="barChart" width="400" height="400"></canvas>
+  </div>
+
+
+  <script>
+    var ctx = document.getElementById("barChart").getContext('2d');
+    var barChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

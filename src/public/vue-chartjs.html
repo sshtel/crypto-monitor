@@ -1,0 +1,121 @@
+  <html>
+  <head>
+    <meta charset="UTF-8"/>
+    <!-- vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+    <!-- vue-chartjs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+    <script src="./charts//vue-chartjs-test.js"></script>
+
+
+  </head>
+  <body>
+
+    <div class="app">
+        {{ message }}
+      <!-- <line-chart></line-chart> -->
+      <line-chart2 ref="foo"></line-chart2>
+      <line-chart2 ref="foo2"></line-chart2>
+
+      <button onclick="updateRandom()">Randomize</button>
+    </div>
+    
+<!--      
+    <h1>
+      Title: chart
+    </h1>
+    <div id=mychart>
+      <br>
+      {{ message }}
+      <input name='asdf'></input>
+      <br>
+      <button @click="fillData()">Randomize</button>
+      <br>
+    </div> -->
+
+    <script>
+
+      var vm = new Vue({
+        el: '.app',
+        data: {
+          message: 'Hello World'
+        },
+        methods: {
+          fillData: function() {
+            console.log(this.component);
+          }
+        }
+      })
+
+      function updateRandom() {
+        console.log(vm.$refs.foo.fillData);
+        vm.$refs.foo.fillData();
+        vm.$refs.foo2.fillData();
+      }
+
+      // new Vue({
+      //   el: '#mychart',
+      //   extends: VueChartJs.Line,
+      //   // mixins: VueChartJs.mixins,
+      //   data: {
+      //     message: 'asdf',
+        
+      //     datacollection: {
+      //       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      //       datasets: [
+      //         {
+      //           label: 'Data Three',
+      //           backgroundColor: '#f87979',
+      //           data: [40, 39, 10, 40, 39, 80, 40]
+      //         }
+      //       ]
+      //     }
+      //     ,
+      //     options: {
+      //       responsive: true,
+      //       maintainAspectRatio: false
+      //     }
+      //   },
+      //   mounted () {
+      //     this.fillData();
+      //     console.log(this.message);
+      //     this.renderChart(this.datacollection, this.options)
+      //   },
+      //   methods: {
+      //     fillData () {
+      //       this.datacollection = {
+      //         labels: this.datacollection.labels,
+      //         datasets: [
+      //           {
+      //             label: 'Data Three',
+      //             backgroundColor: '#f87979',
+      //             data: [this.getRandomInt (),
+      //             this.getRandomInt (),
+      //             this.getRandomInt (),
+      //             this.getRandomInt (),
+      //             this.getRandomInt (),
+      //             this.getRandomInt (),
+      //             this.getRandomInt ()]
+      //           }
+      //         ]
+      //       }
+      //     },
+      //     getRandomInt () {
+      //       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+      //     }
+      //   }
+      // });
+
+    </script>
+    
+    <style>
+      .small {
+        max-width: 600px;
+        margin:  150px auto;
+      }
+    </style>
+
+  </body>
+</html>
