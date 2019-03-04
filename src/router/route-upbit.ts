@@ -76,8 +76,8 @@ export class RouteUpbit {
       }
     });
 
-    // ALL Markets
-    app.get(`${constant.PATHNAME_EXCHANGE_UPBIT}/candles/minutes/:unit/currency/:currency`, async (req, res) => {
+    // ALL Markets Minutes Tick
+    app.get(`${constant.PATHNAME_EXCHANGE_UPBIT}/currency/:currency/candles/minutes/:unit`, async (req, res) => {
       const { unit, currency } = req.params;
       const { count, to } = req.query;
       let base = BaseCurrency.BTC;
@@ -97,10 +97,46 @@ export class RouteUpbit {
         case 'krw':
           base = BaseCurrency.KRW;
           break;
+        default:
+        res.status(400).send({ result: 'error', message: 'wrong currency'});
       }
 
       try {
         const result = await upbitProcessor.getAllCandlesMinutes(base, unit, count, to);
+        res.set({'Content-Type': 'application/json; charset=utf-8'})
+        .status(200).send(JSON.stringify(result, undefined, ' '));
+      } catch (e) {
+        res.status(500).send({ result: 'error', message: e});
+      }
+    });
+
+    // ALL Markets days Tick
+    app.get(`${constant.PATHNAME_EXCHANGE_UPBIT}/currency/:currency/candles/days`, async (req, res) => {
+      const { currency } = req.params;
+      const { count, to } = req.query;
+      let base = BaseCurrency.BTC;
+      switch (currency) {
+        case 'btc':
+          base = BaseCurrency.BTC;
+          break;
+        case 'eth':
+          base = BaseCurrency.ETH;
+          break;
+        case 'usd':
+          base = BaseCurrency.USD;
+          break;
+        case 'usdt':
+          base = BaseCurrency.USDT;
+          break;
+        case 'krw':
+          base = BaseCurrency.KRW;
+          break;
+        default:
+        res.status(400).send({ result: 'error', message: 'wrong currency'});
+      }
+
+      try {
+        const result = await upbitProcessor.getAllCandlesDays(base, count, to);
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {

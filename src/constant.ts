@@ -15,11 +15,14 @@ class Constant {
 
   public UPBIT_ALL_KRW_MARKET_LIST =
   [
-    'KRW-BTC', 'KRW-ETH',  'KRW-XRP', 'KRW-NEO', 'KRW-LTC',
-    'KRW-XLM', 'KRW-ADA',
-    'KRW-EOS', 'KRW-TRX',
-    'KRW-BCH'
+    'KRW-BTC', 'KRW-ETH',  'KRW-XRP'
   ];
+  // [
+  //   'KRW-BTC', 'KRW-ETH',  'KRW-XRP', 'KRW-NEO', 'KRW-LTC',
+  //   'KRW-XLM', 'KRW-ADA',
+  //   'KRW-EOS', 'KRW-TRX',
+  //   'KRW-BCH'
+  // ];
   // [
   // 'KRW-BTC', 'KRW-DASH', 'KRW-ETH', 'KRW-NEO', 'KRW-MTL', 'KRW-LTC', 'KRW-STRAT', 'KRW-XRP', 'KRW-ETC', 'KRW-OMG',
   // 'KRW-SNT', 'KRW-WAVES', 'KRW-PIVX', 'KRW-XEM', 'KRW-ZEC', 'KRW-XMR', 'KRW-QTUM', 'KRW-GNT', 'KRW-LSK', 'KRW-STEEM',
