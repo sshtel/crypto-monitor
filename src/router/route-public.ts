@@ -1,9 +1,9 @@
+import * as express from 'express';
+
 export class RoutePublic {
   public static set(app) {
-
-    app.get('/', (req, res) => {
-      res.send('Hello World!');
-    });
+    const staticPath = __dirname + '/../../src/public';
+    app.use('/', express.static(staticPath));
 
   }
 

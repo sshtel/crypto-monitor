@@ -1,0 +1,184 @@
+  <html>
+  <head>
+    <meta charset="UTF-8"/>
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+    <!-- Google Chart -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <!-- vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+    <!-- /charts/ -->
+    <script type="text/javascript" src="./charts/trend-rate-chart.js"></script>
+    <script type="text/javascript" src="./charts/trend-price-percentage-chart.js"></script>
+    <script type="text/javascript" src="./charts/chart-updater.js"></script>
+
+  </head>
+  <body>
+
+    <!-- <div id="chart_upbit_rate_krw_15min" style="width: 900px; height: 500px"></div> -->
+    <div id="chart_upbit_rate_krw_4hrs" style="width: 900px; height: 500px"></div>
+    <div id="chart_upbit_rate_krw_days" style="width: 900px; height: 500px"></div>
+    <div id="chart_price_btc" style="width: 900px; height: 500px"></div>
+    <div id="chart_price_eth" style="width: 900px; height: 500px"></div>
+    <div id="chart_price_xrp" style="width: 900px; height: 500px"></div>
+
+      <script>
+        const URL = document.URL;
+        google.charts.load('current', {'packages':['line']});
+
+        // const chartUpbitRateKrw15min = new TrendRateChartGoogle('chart_upbit_rate_krw_15min', undefined,
+        // {
+        //   chart: {
+        //     title: 'Upbit price change rate chart for 15 * 100min (about 1day)',
+        //     subtitle: 'KRW market, 15min tick'
+        //   },
+        //   width: 900, height: 500
+        // });
+        // new ChartUpdater(chartUpbitRateKrw15min, {
+        //   exchange: 'upbit', currency: 'krw',
+        //   candles: 'minutes', candlesUnit: '15', count: '100'
+        // });
+
+        const chartUpbitRateKrw4hrs = new TrendRateChartGoogle('chart_upbit_rate_krw_4hrs', undefined,
+        {
+          chart: {
+            title: 'Upbit price change rate chart for 240 * 100minutes (about 2weeks)',
+            subtitle: 'KRW market, 240min tick'
+          },
+          width: 900, height: 500
+        });
+        new ChartUpdater(chartUpbitRateKrw4hrs, {
+          exchange: 'upbit', currency: 'krw',
+          candles: 'minutes', candlesUnit: '240', count: '100'
+        });
+
+        const chartUpbitRateKrwDays = new TrendRateChartGoogle('chart_upbit_rate_krw_days', undefined,
+        {
+          chart: {
+            title: 'Upbit price change rate chart for 200 days',
+            subtitle: 'KRW market, 1day tick'
+          },
+          width: 900, height: 500
+        });
+        new ChartUpdater(chartUpbitRateKrwDays, {
+          exchange: 'upbit', currency: 'krw',
+          candles: 'days', candlesUnit: undefined, count: '200'
+        });
+
+        // setTimeout( function () {
+        //   $.ajax({url: `${URL}exchange/upbit/currency/krw/candles/minutes/15?count=100`,
+        //     success: function (result) {
+        //       chartUpbitRateKrw15min.clearRow();
+        //       chartUpbitRateKrw15min.addRows(result.chart);
+        //     }
+        //   });
+
+        //   $.ajax({url: `${URL}exchange/upbit/currency/krw/candles/days?count=200`,
+        //     success: function (result) {
+        //       chartUpbitRateKrwDays.clearRow();
+        //       chartUpbitRateKrwDays.addRows(result.chart);
+        //     }
+        //   });
+
+        // }.bind(this), 500);
+
+        // const chartBTC = new TrendPricePercentageChart('linechart_price_btc', [
+        //   { type: 'string', title: 'DateTime'},
+        //   { type: 'number', title: 'BTC'},
+        //   { type: 'number', title: 'BTC Percentage'}
+        // ],
+        // {
+        //   chart: { title: 'BTC Price/Percentage' },
+        //   width: 900,
+        //   height: 500
+        // });
+
+        // setTimeout( function () {
+        //   const URL_KRW_BTC = 'https://crix-api-endpoint.upbit.com/v1/crix/candles/minutes/3?code=CRIX.UPBIT.KRW-BTC&count=100';
+        //   $.ajax({url: URL_KRW_BTC,
+        //     success: function (result) {
+        //       chartBTC.clearRow();
+        //       const accent = result.reverse();
+        //       const base = accent[0];
+        //       let rowDataSet = [];
+        //       accent.forEach(element => {
+        //         const myPrice = element.tradePrice;
+        //         const percentError =  ( myPrice / base.tradePrice ) - 1;
+        //         const row = [ element.candleDateTime, element.tradePrice, percentError ];
+        //         chartBTC.addRow(row);
+        //       });
+        //     }
+        //   });
+        // }.bind(this), 1000);
+
+
+        // const chartETH = new TrendPricePercentageChart('linechart_price_eth', [
+        //   { type: 'string', title: 'DateTime'},
+        //   { type: 'number', title: 'ETH'},
+        //   { type: 'number', title: 'ETH Percentage'}
+        // ],
+        // {
+        //   chart: { title: 'ETH Price/Percentage' },
+        //   width: 900,
+        //   height: 500
+        // });
+
+        // setTimeout( function () {
+        //   const url = 'https://crix-api-endpoint.upbit.com/v1/crix/candles/minutes/3?code=CRIX.UPBIT.KRW-ETH&count=100';
+        //   $.ajax({url: url,
+        //     success: function (result) {
+        //       chartETH.clearRow();
+        //       const accent = result.reverse();
+        //       const base = accent[0];
+        //       let rowDataSet = [];
+        //       accent.forEach(element => {
+        //         const myPrice = element.tradePrice;
+        //         const percentError =  ( myPrice / base.tradePrice ) - 1;
+        //         const row = [ element.candleDateTime, element.tradePrice, percentError ];
+        //         chartETH.addRow(row);
+        //       });
+        //     }
+        //   });
+
+        // }.bind(this), 1000);
+
+
+        // const chartXRP = new TrendPricePercentageChart('linechart_price_xrp', [
+        //   { type: 'string', title: 'DateTime'},
+        //   { type: 'number', title: 'XRP'},
+        //   { type: 'number', title: 'XRP Percentage'}
+        // ],
+        // {
+        //   chart: { title: 'XRP Price/Percentage' },
+        //   width: 900,
+        //   height: 500
+        // });
+
+        // setTimeout( function () {
+        //   const url = 'https://crix-api-endpoint.upbit.com/v1/crix/candles/minutes/3?code=CRIX.UPBIT.KRW-XRP&count=100';
+        //   $.ajax({url: url,
+        //     success: function (result) {
+        //       chartXRP.clearRow();
+        //       const accent = result.reverse();
+        //       const base = accent[0];
+        //       let rowDataSet = [];
+        //       accent.forEach(element => {
+        //         const myPrice = element.tradePrice;
+        //         const percentError =  ( myPrice / base.tradePrice ) - 1;
+        //         const row = [ element.candleDateTime, element.tradePrice, percentError ];
+        //         chartXRP.addRow(row);
+        //       });
+        //     }
+        //   });
+
+        // }.bind(this), 1000);
+
+      </script>
+
+
+  </body>
+</html>

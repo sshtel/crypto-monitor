@@ -15,7 +15,7 @@ class Constant {
 
   public UPBIT_ALL_KRW_MARKET_LIST =
   [
-    'KRW-BTC', 'KRW-ETH',  'KRW-XRP'
+    'KRW-BTC', 'KRW-ETH',  'KRW-XRP', 'KRW-EOS', 'KRW-TRX', 'KRW-XLM', 'KRW-ADA', 'KRW-BCH', 'KRW-LTC', 'KRW-ZEC'
   ];
   // [
   //   'KRW-BTC', 'KRW-ETH',  'KRW-XRP', 'KRW-NEO', 'KRW-LTC',

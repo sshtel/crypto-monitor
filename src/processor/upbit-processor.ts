@@ -29,12 +29,13 @@ class UpbitProcessor implements Exchange {
   public async getAllCandlesMinutes(baseCurrency: BaseCurrency, unit: number, count?: number, to?: string) {
     const list: string[] | undefined = this.getListByBaseCurrency(baseCurrency);
     const result: {[key: string]: PriceUnit} = {};
-    // const resultMap: Map<string, PriceUnit> = new Map();
     const resultArray: any[] = [];
+    const chartArray: any[] = [];
 
     // BTC is base
     const baseMarket = 'KRW-BTC';
-    const KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market: baseMarket, count, to});
+    let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market: baseMarket, count, to});
+    KRW_BTC_RAW = KRW_BTC_RAW.reverse();
     await Promise.all(
       KRW_BTC_RAW.map( async node => {
         const tradePrice = node.trade_price;
@@ -90,8 +91,25 @@ class UpbitProcessor implements Exchange {
       })
     );
 
+    const firstNode = resultArray[0];
+    await Promise.all(
+      resultArray.map( async node => {
+        const dataset: any = [];
+        dataset.push(node.datetimeKst);
+
+        await Promise.all(
+          list.map( async market => {
+            const rate = ( node.tradePrice[market] / firstNode.tradePrice[market] ) - 1;
+            dataset.push(rate);
+          })
+        );
+        chartArray.push( dataset );
+      })
+    );
+
     _.set(result, 'unit', unit);
     _.set(result, 'data', resultArray);
+    _.set(result, 'chart', chartArray);
     _.set(result, 'column', list);
 
     return result;
@@ -101,10 +119,12 @@ class UpbitProcessor implements Exchange {
     const list: string[] | undefined = this.getListByBaseCurrency(baseCurrency);
     const result: {[key: string]: PriceUnit} = {};
     const resultArray: any[] = [];
-    const baseMarket = 'KRW-BTC';
-    const KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesDays( { market: baseMarket, count, to});
+    const chartArray: any[] = [];
 
     // set base KRW-BTC
+    const baseMarket = 'KRW-BTC';
+    let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesDays( { market: baseMarket, count, to});
+    KRW_BTC_RAW = KRW_BTC_RAW.reverse();
     await Promise.all(
       KRW_BTC_RAW.map( async node => {
         const tradePrice = node.trade_price;
@@ -162,8 +182,25 @@ class UpbitProcessor implements Exchange {
       })
     );
 
+    const firstNode = resultArray[0];
+    await Promise.all(
+      resultArray.map( async node => {
+        const dataset: any = [];
+        dataset.push(node.datetimeKst);
+
+        await Promise.all(
+          list.map( async market => {
+            const rate = ( node.tradePrice[market] / firstNode.tradePrice[market] ) - 1;
+            dataset.push(rate);
+          })
+        );
+        chartArray.push( dataset );
+      })
+    );
+
     _.set(result, 'data', resultArray);
     _.set(result, 'column', list);
+    _.set(result, 'chart', chartArray);
 
     return result;
   }
