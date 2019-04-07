@@ -28,8 +28,10 @@ class UpbitProcessor implements Exchange {
 
   }
 
-  public async getAllCandlesMinutes(baseCurrency: BaseCurrency, unit: number, count?: number, to?: string) {
-    const list: string[] | undefined = this.getListByBaseCurrency(baseCurrency);
+  public async getAllCandlesMinutes( param: { baseCurrency: BaseCurrency, unit: number,
+                                              count?: number, to?: string, squad?: number }) {
+    const { baseCurrency, unit, count, to, squad } = param;
+    const list: string[] | undefined = this.getListByBaseCurrency(baseCurrency, squad || 0);
     const result: {[key: string]: PriceUnit} = {};
     const resultArray: any[] = [];
     const chartArray: any[] = [];
@@ -118,8 +120,10 @@ class UpbitProcessor implements Exchange {
     return result;
   }
 
-  public async getAllCandlesDays(baseCurrency: BaseCurrency, count?: number, to?: string) {
-    const list: string[] | undefined = this.getListByBaseCurrency(baseCurrency);
+  public async getAllCandlesDays( param: { baseCurrency: BaseCurrency,
+                                           count?: number, to?: string, squad?: number }) {
+    const { baseCurrency, count, to, squad } = param;
+    const list: string[] | undefined = this.getListByBaseCurrency(baseCurrency, squad || 0);
     const result: {[key: string]: PriceUnit} = {};
     const resultArray: any[] = [];
     const chartArray: any[] = [];
@@ -205,8 +209,8 @@ class UpbitProcessor implements Exchange {
     return result;
   }
 
-  private getListByBaseCurrency(baseCurrency: BaseCurrency) {
-    let list = constant.UPBIT_ALL_KRW_MARKET_LIST;
+  private getListByBaseCurrency(baseCurrency: BaseCurrency, squad: number) {
+    let list = constant.UPBIT_KRW_MARKET_SQUADS[0];
     switch (baseCurrency) {
       case BaseCurrency.BTC:
         list = constant.UPBIT_ALL_BTC_MARKET_LIST;
@@ -218,9 +222,10 @@ class UpbitProcessor implements Exchange {
         list = constant.UPBIT_ALL_USDT_MARKET_LIST;
         break;
       case BaseCurrency.KRW:
+        list = constant.UPBIT_KRW_MARKET_SQUADS[squad];
+        break;
       case BaseCurrency.USD:  // not used
       default:
-        list = constant.UPBIT_ALL_KRW_MARKET_LIST;
     }
     return list;
   }
