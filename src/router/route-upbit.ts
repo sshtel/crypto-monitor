@@ -36,7 +36,7 @@ export class RouteUpbit {
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
-        res.status(500).send({ result: 'error', message: e});
+        this.respError500(res, e);
       }
     });
 
@@ -48,7 +48,7 @@ export class RouteUpbit {
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
-        res.status(500).send({ result: 'error', message: e});
+        this.respError500(res, e);
       }
     });
 
@@ -60,7 +60,7 @@ export class RouteUpbit {
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
-        res.status(500).send({ result: 'error', message: e});
+        this.respError500(res, e);
       }
     });
 
@@ -72,7 +72,7 @@ export class RouteUpbit {
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
-        res.status(500).send({ result: 'error', message: e});
+        this.respError500(res, e);
       }
     });
 
@@ -106,7 +106,7 @@ export class RouteUpbit {
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
-        res.status(500).send({ result: 'error', message: e});
+        this.respError500(res, e);
       }
     });
 
@@ -140,8 +140,13 @@ export class RouteUpbit {
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
-        res.status(500).send({ result: 'error', message: e});
+        this.respError500(res, e);
       }
     });
+  }
+
+  private static respError500(res, e) {
+    console.error(e);
+    res.status(500).send({ result: 'error', message: e});
   }
 }
