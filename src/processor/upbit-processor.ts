@@ -1,6 +1,8 @@
+import * as Bluebird from 'bluebird';
 import * as _ from 'lodash';
 import { Upbit } from 'upbit-js';
 import { constant } from '../constant';
+import { ERROR_CLASS, getError } from '../errors/error-common';
 import { BaseCurrency, PriceUnit } from '../interface';
 import { Exchange } from '../interface/interface-exchange';
 class UpbitProcessor implements Exchange {
@@ -48,48 +50,49 @@ class UpbitProcessor implements Exchange {
         resultArray.push(obj);
       })
     );
-    await Promise.all(
-      list.map( async market => {
-        try {
-          const res = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market, count, to});
-          if (res.length < 0) return;
 
-          await Promise.all(
-            res.map( async node => {
-              const datetimeUtc = node.candle_date_time_utc;
-              const datetimeKst = node.candle_date_time_kst;
-              const tradePrice = node.trade_price;
-              const item = result[datetimeUtc];
-              if (_.isNil(item)) {
-                const obj = {
-                  datetimeUtc,
-                  datetimeKst,
-                  tradePrice: { }
-                };
-                obj.tradePrice[`${market}`] = tradePrice;
-                result[datetimeUtc] = obj;
-              } else {
-                result[datetimeUtc].tradePrice[`${market}`] = tradePrice;
-              }
-            })
-          );
-          await Promise.all(
-            res.map( async node => {
-              const datetimeUtc = node.candle_date_time_utc;
-              const tradePrice = node.trade_price;
-              const idx = resultArray.findIndex( element => {
-                return element.datetimeUtc === datetimeUtc;
-              });
-              if (resultArray[idx]) resultArray[idx].tradePrice[`${market}`] = tradePrice;
-            })
-          );
+    for (const market of list) {
+      await Bluebird.delay(200);
+      try {
+        const res = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market, count, to});
+        if (res.length < 0) return;
 
-        } catch (e) {
-            console.error(e);
-            return;
-        }
-      })
-    );
+        await Promise.all(
+          res.map( async node => {
+            const datetimeUtc = node.candle_date_time_utc;
+            const datetimeKst = node.candle_date_time_kst;
+            const tradePrice = node.trade_price;
+            const item = result[datetimeUtc];
+            if (_.isNil(item)) {
+              const obj = {
+                datetimeUtc,
+                datetimeKst,
+                tradePrice: { }
+              };
+              obj.tradePrice[`${market}`] = tradePrice;
+              result[datetimeUtc] = obj;
+            } else {
+              result[datetimeUtc].tradePrice[`${market}`] = tradePrice;
+            }
+          })
+        );
+        await Promise.all(
+          res.map( async node => {
+            const datetimeUtc = node.candle_date_time_utc;
+            const tradePrice = node.trade_price;
+            const idx = resultArray.findIndex( element => {
+              return element.datetimeUtc === datetimeUtc;
+            });
+            if (resultArray[idx]) resultArray[idx].tradePrice[`${market}`] = tradePrice;
+          })
+        );
+
+      } catch (e) {
+        const error = getError(ERROR_CLASS.EXCHG_UPBIT, e);
+        console.error(error);
+        return;
+      }
+    }
 
     const firstNode = resultArray[0];
     await Promise.all(
@@ -138,50 +141,47 @@ class UpbitProcessor implements Exchange {
       })
     );
 
-    await Promise.all(
-      list.map( async market => {
-        try {
-          const res = await UpbitProcessor.getUpbit().candlesDays( { market, count, to});
-          if (res.length < 0) return;
+    for (const market of list) {
+      await Bluebird.delay(200);
+      try {
+        const res = await UpbitProcessor.getUpbit().candlesDays( { market, count, to});
+        if (res.length < 0) return;
 
-          await Promise.all(
-            res.map( async node => {
-              const datetimeUtc = node.candle_date_time_utc;
-              const datetimeKst = node.candle_date_time_kst;
-              const tradePrice = node.trade_price;
-              const item = result[datetimeUtc];
-              if (_.isNil(item)) {
-                const obj = {
-                  datetimeUtc,
-                  datetimeKst,
-                  tradePrice: { }
-                };
-                obj.tradePrice[`${market}`] = tradePrice;
-                result[datetimeUtc] = obj;
-              } else {
-                result[datetimeUtc].tradePrice[`${market}`] = tradePrice;
-              }
-            })
-          );
+        await Promise.all(
+          res.map( async node => {
+            const datetimeUtc = node.candle_date_time_utc;
+            const datetimeKst = node.candle_date_time_kst;
+            const tradePrice = node.trade_price;
+            const item = result[datetimeUtc];
+            if (_.isNil(item)) {
+              const obj = {
+                datetimeUtc,
+                datetimeKst,
+                tradePrice: { }
+              };
+              obj.tradePrice[`${market}`] = tradePrice;
+              result[datetimeUtc] = obj;
+            } else {
+              result[datetimeUtc].tradePrice[`${market}`] = tradePrice;
+            }
+          })
+        );
 
-          await Promise.all(
-            res.map( async node => {
-              const datetimeUtc = node.candle_date_time_utc;
-              const tradePrice = node.trade_price;
-              const idx = resultArray.findIndex( element => {
-                return element.datetimeUtc === datetimeUtc;
-              });
-              if (resultArray[idx]) resultArray[idx].tradePrice[`${market}`] = tradePrice;
-            })
-          );
+        await Promise.all(
+          res.map( async node => {
+            const datetimeUtc = node.candle_date_time_utc;
+            const tradePrice = node.trade_price;
+            const idx = resultArray.findIndex( element => {
+              return element.datetimeUtc === datetimeUtc;
+            });
+            if (resultArray[idx]) resultArray[idx].tradePrice[`${market}`] = tradePrice;
+          })
+        );
 
-        } catch (e) {
-            console.error(e);
-            return;
-        }
-      })
-    );
-
+      } catch (e) {
+        console.error(getError(ERROR_CLASS.EXCHG_UPBIT, e));
+      }
+    }
     const firstNode = resultArray[0];
     await Promise.all(
       resultArray.map( async node => {
