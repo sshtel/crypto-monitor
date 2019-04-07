@@ -11,6 +11,7 @@ class ChartUpdater {
       url += `/${this.opt.candlesUnit}`
     }
     url += `?count=${this.opt.count}`;
+    url += `&squad=${this.opt.squad || 0}`;
     
     setTimeout( function () {
       const chart = this.chart;

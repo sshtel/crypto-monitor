@@ -79,7 +79,8 @@ export class RouteUpbit {
     // ALL Markets Minutes Tick
     app.get(`${constant.PATHNAME_EXCHANGE_UPBIT}/currency/:currency/candles/minutes/:unit`, async (req, res) => {
       const { unit, currency } = req.params;
-      const { count, to } = req.query;
+      console.log(req.query);
+      const { count, to, squad } = req.query;
       let base = BaseCurrency.BTC;
       switch (currency) {
         case 'btc':
@@ -102,7 +103,7 @@ export class RouteUpbit {
       }
 
       try {
-        const result = await upbitProcessor.getAllCandlesMinutes(base, unit, count, to);
+        const result = await upbitProcessor.getAllCandlesMinutes({ baseCurrency: base, unit, count, to, squad});
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {
@@ -113,7 +114,7 @@ export class RouteUpbit {
     // ALL Markets days Tick
     app.get(`${constant.PATHNAME_EXCHANGE_UPBIT}/currency/:currency/candles/days`, async (req, res) => {
       const { currency } = req.params;
-      const { count, to } = req.query;
+      const { count, to, squad } = req.query;
       let base = BaseCurrency.BTC;
       switch (currency) {
         case 'btc':
@@ -136,7 +137,7 @@ export class RouteUpbit {
       }
 
       try {
-        const result = await upbitProcessor.getAllCandlesDays(base, count, to);
+        const result = await upbitProcessor.getAllCandlesDays({ baseCurrency: base, count, to, squad });
         res.set({'Content-Type': 'application/json; charset=utf-8'})
         .status(200).send(JSON.stringify(result, undefined, ' '));
       } catch (e) {

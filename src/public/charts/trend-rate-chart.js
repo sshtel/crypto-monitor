@@ -4,7 +4,12 @@ class TrendRateChartGoogle {
   constructor(divName, columns, options) {
     this.divName = divName;
     if (columns) {
-      this.columns = columns;
+      const temp = [];
+      temp.push({ type: 'string', title: 'DateTime'});
+      for (const value of columns ) {
+        temp.push({ type: 'number', title: value});
+      };
+      this.columns = temp;
     } else {
       this.columns = [
         { type: 'string', title: 'DateTime'},
