@@ -5,7 +5,7 @@ import { RoutePublic } from './router/route-public';
 import { RouteUpbit } from './router/route-upbit';
 
 // Nuxt Framework
-import * as consola from 'consola';
+// import * as consola from 'consola';
 import { Builder, Nuxt } from 'nuxt';
 
 // Import and Set Nuxt.js options
@@ -21,15 +21,10 @@ async function start() {
   console.log(upbit.getAccessToken());
   console.log(upbit.getSecretToken());
 
-  RouteUpbit.set(app);
-  RoutePublic.set(app);
-
-  const PORT = process.env.PORT || 8080;
-
   // Init Nuxt.js
   const nuxt = new Nuxt(config);
   const { host, port } = nuxt.options.server;
-
+  console.log(`http://${host}:${port}`);
   // Build only in dev mode
   if (config.dev) {
     const builder = new Builder(nuxt);
@@ -41,14 +36,17 @@ async function start() {
   // Give nuxt middleware to express
   app.use(nuxt.render);
 
+  RouteUpbit.set(app);
+  RoutePublic.set(app);
+
   // Listen the server
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}!`);
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}!`);
   });
 
-  consola.default.ready({
-    message: `Server listening on http://${host}:${port}`,
-    badge: true
-  });
+  // consola.default.ready({
+  //   message: `Server listening on http://${host}:${port}`,
+  //   badge: true
+  // });
 }
 start();

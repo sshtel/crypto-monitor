@@ -66,5 +66,6 @@ module.exports = {
     */
     extend(config, ctx) {
     }
-  }
+  },
+  serverMiddleware: ['~/api/index.js', '~/dist/router/nuxt-route-upbit.js'],
 }
