@@ -96,13 +96,18 @@ export default {
       items: [
         {
           icon: 'bubble_chart',
-          title: 'Upbit',
+          title: 'Upbit Squad 0',
           to: '/'
         },
         {
-          icon: 'bubble_chart',
-          title: 'Inspire',
-          to: '/inspire'
+          icon: 'filter_1',
+          title: 'Upbit Squad 1',
+          to: '/upbit-squad1'
+        },
+        {
+          icon: 'info',
+          title: 'About',
+          to: '/about'
         }
         
       ],

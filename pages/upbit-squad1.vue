@@ -8,21 +8,22 @@
       </v-card>
       
       <p> </p>
-      <h1> Upbit rate trend chart - 240 min tick, 2 weeks</h1>
+
+      <h1> Upbit rate trend chart (Squad 1)- 240 min tick, 2 weeks</h1>
       <GChart
       type="LineChart"
-      :data     ="chartDataSquad0Min240"
-      :options  ="chartOptsSquad0Min240"
-      @ready    ="onChartReadySquad0Min240"
+      :data     ="chartDataSquad1Min240"
+      :options  ="chartOptsSquad1Min240"
+      @ready    ="onChartReadySquad1Min240"
       />
 
       <p> </p>
-      <h1> Upbit rate trend chart - 1 day tick, 200 days</h1>
+      <h1> Upbit rate trend chart (Squad 1)- 1 day tick, 200 days</h1>
       <GChart
       type="LineChart"
-      :data     ="chartDataSquad0Days"
-      :options  ="chartOptsSquad0Days"
-      @ready="onChartReadySquad0Days"
+      :data     ="chartDataSquad1Days"
+      :options  ="chartOptsSquad1Days"
+      @ready="onChartReadySquad1Days"
       />
 
     </v-flex>
@@ -145,6 +146,46 @@ export default {
           this.chartOptsSquad0Days = options;
         })
       });
+    },
+    onChartReadySquad1Min240 (chart, google) {
+      const protocol = `http://`;
+      const hostname = `${location.host}`;
+      const pathname = `/exchange/upbit/currency/krw/candles/minutes/240?count=100&squad=1`;
+      const url = `${protocol}${hostname}/api${pathname}`;
+      fetch(url)
+      .then( response => {
+        response.json().then( resp => {
+          let options = this.options;
+          options.chart.title = 'Trend rate chart about 2 weeks - Squad 0'
+          const newData = [];
+          newData.push([ 'DateTime' ].concat(resp.column));
+          resp.chart.forEach( value => {
+            newData.push(value);
+          });
+          this.chartDataSquad1Min240 = newData;
+          this.chartOptsSquad1Min240 = options;
+        })
+      });
+    },
+    onChartReadySquad1Days (chart, google) {
+      const protocol = `http://`;
+      const hostname = `${location.host}`;
+      const pathname = `/exchange/upbit/currency/krw/candles/days?count=200&squad=1`;
+      const url = `${protocol}${hostname}/api${pathname}`;
+      fetch(url)
+      .then( response => {
+        response.json().then( resp => {
+          let options = this.options;
+          options.chart.title = 'Trend rate chart about 2 weeks - Squad 0'
+          const newData = [];
+          newData.push([ 'DateTime' ].concat(resp.column));
+          resp.chart.forEach( value => {
+            newData.push(value);
+          });
+          this.chartDataSquad1Days = newData;
+          this.chartOptsSquad1Days = options;
+        })
+      });
     }
   },
   data () {
@@ -160,7 +201,19 @@ export default {
         [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
-      chartOptsSquad0Days: optionsBase
+      chartOptsSquad0Days: optionsBase,
+
+      //squad 1
+      chartDataSquad1Min240: [
+        [ 'DateTime', '', '', '', '', '', '', '', '', '', '' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad1Min240: optionsBase,
+      chartDataSquad1Days: [
+        [ 'DateTime', '', '', '', '', '', '', '', '', '', '' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad1Days: optionsBase
     }
   }
 }
