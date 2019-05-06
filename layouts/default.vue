@@ -81,7 +81,7 @@
       :fixed="fixed"
       app
     >
-      <span>&copy; 2019</span>
+      <span>&copy; 2019, developer: Steve Song</span>
     </v-footer>
   </v-app>
 </template>
@@ -109,7 +109,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Crypto Monitor by Steve Song'
     }
   }
 }
