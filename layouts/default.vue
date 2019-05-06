@@ -95,8 +95,8 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'apps',
-          title: 'Welcome',
+          icon: 'bubble_chart',
+          title: 'Upbit',
           to: '/'
         },
         {
@@ -104,6 +104,7 @@ export default {
           title: 'Inspire',
           to: '/inspire'
         }
+        
       ],
       miniVariant: false,
       right: true,
