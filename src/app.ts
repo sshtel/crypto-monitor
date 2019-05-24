@@ -1,36 +1,51 @@
 import * as express from 'express';
 
-// import * as jwt from 'jsonwebtoken';
-// import * as request from 'superagent';
-// import * as querystring from 'querystring';
 import { Upbit } from 'upbit-js';
-// import { UpbitCron } from './cron/upbit-cron';
 import { RoutePublic } from './router/route-public';
 import { RouteUpbit } from './router/route-upbit';
+
+// Nuxt Framework
+// import * as consola from 'consola';
+import { Builder, Nuxt } from 'nuxt';
+
+// Import and Set Nuxt.js options
+import * as config from '../nuxt.config.js';
+config.dev = !(process.env.NODE_ENV === 'production');
 
 const app = express();
 
 const upbit = new Upbit();
-// const upbitCron = new UpbitCron();
 
-// let candlesMinutes = {};
-// upbitCron.on('candlesMinutes', value => {
-//   candlesMinutes = value;
-// });
+async function start() {
+  // Init Upbit
+  console.log(upbit.getAccessToken());
+  console.log(upbit.getSecretToken());
 
-// let orderBook = {};
-// upbitCron.on('orderBook', value => {
-//   orderBook = value;
-// });
+  // Init Nuxt.js
+  const nuxt = new Nuxt(config);
+  const { port } = nuxt.options.server;
+  // Build only in dev mode
+  if (config.dev) {
+    const builder = new Builder(nuxt);
+    await builder.build();
+  } else {
+    await nuxt.ready();
+  }
 
-console.log(upbit.getAccessToken());
-console.log(upbit.getSecretToken());
-// const query = querystring.queryEncode({/* 요청할 파라미터 */});
+  // Give nuxt middleware to express
+  app.use(nuxt.render);
 
-RouteUpbit.set(app);
-RoutePublic.set(app);
+  RouteUpbit.set(app);
+  RoutePublic.set(app);
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}!`);
-});
+  // Listen the server
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}!`);
+  });
+
+  // consola.default.ready({
+  //   message: `Server listening on http://${host}:${port}`,
+  //   badge: true
+  // });
+}
+start();
