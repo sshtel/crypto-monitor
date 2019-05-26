@@ -105,6 +105,11 @@ export default {
           to: '/upbit-squad1'
         },
         {
+          icon: 'filter_1',
+          title: 'Upbit Daily Volume',
+          to: '/upbit-daily-volume'
+        },
+        {
           icon: 'info',
           title: 'About',
           to: '/about'
