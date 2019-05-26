@@ -39,23 +39,24 @@ class UpbitProcessor implements Exchange {
 
     // BTC is base
     const baseMarket = 'KRW-BTC';
-    let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market: baseMarket, count, to});
-    KRW_BTC_RAW = KRW_BTC_RAW.reverse();
-    await Promise.all(
-      KRW_BTC_RAW.map( async node => {
-        const tradePrice = node.trade_price;
-        const accTradePrice = node.candle_acc_trade_price;
-        const obj: CandleMinuteItem = {
-          datetimeUtc: node.candle_date_time_utc,
-          datetimeKst: node.candle_date_time_kst,
-          tradePrice: {},
-          accTradePrice: {}
-        };
-        obj.tradePrice[`${baseMarket}`] = tradePrice;
-        obj.accTradePrice[`${baseMarket}`] = accTradePrice;
-        resultArray.push(obj);
-      })
-    );
+    await this.setSortedBaseArrayForMinutes(resultArray, baseMarket, unit, count, to);
+    // let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market: baseMarket, count, to});
+    // KRW_BTC_RAW = KRW_BTC_RAW.reverse();
+    // await Promise.all(
+    //   KRW_BTC_RAW.map( async node => {
+    //     const tradePrice = node.trade_price;
+    //     const accTradePrice = node.candle_acc_trade_price;
+    //     const obj: CandleMinuteItem = {
+    //       datetimeUtc: node.candle_date_time_utc,
+    //       datetimeKst: node.candle_date_time_kst,
+    //       tradePrice: {},
+    //       accTradePrice: {}
+    //     };
+    //     _.set(obj, `tradePrice.${baseMarket}`, tradePrice);
+    //     _.set(obj, `accTradePrice.${baseMarket}`, accTradePrice);
+    //     resultArray.push(obj);
+    //   })
+    // );
 
     for (const market of list) {
       await Bluebird.delay(200);
@@ -95,8 +96,6 @@ class UpbitProcessor implements Exchange {
               return element.datetimeUtc === datetimeUtc;
             });
             if (resultArray[idx]) {
-              // resultArray[idx].tradePrice[`${market}`] = tradePrice;
-              // resultArray[idx].accTradePrice[`${market}`] = accTradePrice;
               _.set(resultArray, `[${idx}].tradePrice.${market}`, tradePrice);
               _.set(resultArray, `[${idx}].accTradePrice.${market}`, accTradePrice);
             }
@@ -111,7 +110,6 @@ class UpbitProcessor implements Exchange {
     }
 
     const firstNode = resultArray[0];
-
     for (const node of resultArray) {
       const dataset: any[] = [];
       const datasetAcctPrice: any[] = [];
@@ -121,19 +119,17 @@ class UpbitProcessor implements Exchange {
 
       await Promise.all(
         list.map( async market => {
-          const rate = ( node.tradePrice[market] / firstNode.tradePrice[market] ) - 1;
+          const rate = this.getPriceChangeRate(_.get(node, `tradePrice.${market}`),
+                                               _.get(firstNode, `tradePrice.${market}`));
           dataset.push(rate);
           datasetAcctPrice.push( _.get(node, `accTradePrice.${market}`));
         })
       );
       chartArray.push( dataset );
       chartArrayAcctPrice.push( datasetAcctPrice );
-      // console.log(dataset);
-      // console.log(datasetAcctPrice);
     }
 
     _.set(result, 'unit', unit);
-    // _.set(result, 'data', resultArray);
     _.set(result, 'chart', chartArray);
     _.set(result, 'chartAccPrice', chartArrayAcctPrice);
     _.set(result, 'column', list);
@@ -152,23 +148,24 @@ class UpbitProcessor implements Exchange {
 
     // set base KRW-BTC
     const baseMarket = 'KRW-BTC';
-    let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesDays( { market: baseMarket, count, to});
-    KRW_BTC_RAW = KRW_BTC_RAW.reverse();
-    await Promise.all(
-      KRW_BTC_RAW.map( async node => {
-        const tradePrice = node.trade_price;
-        const accTradePrice = node.candle_acc_trade_price;
-        const obj: CandleDayItem = {
-          datetimeUtc: node.candle_date_time_utc,
-          datetimeKst: node.candle_date_time_kst,
-          tradePrice: {},
-          accTradePrice: {}
-        };
-        obj.tradePrice[`${baseMarket}`] = tradePrice;
-        obj.accTradePrice[`${baseMarket}`] = accTradePrice;
-        resultArray.push(obj);
-      })
-    );
+    await this.setSortedBaseArrayForDays(resultArray, baseMarket, count, to);
+    // let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesDays( { market: baseMarket, count, to});
+    // KRW_BTC_RAW = KRW_BTC_RAW.reverse();
+    // await Promise.all(
+    //   KRW_BTC_RAW.map( async node => {
+    //     const tradePrice = node.trade_price;
+    //     const accTradePrice = node.candle_acc_trade_price;
+    //     const obj: CandleDayItem = {
+    //       datetimeUtc: node.candle_date_time_utc,
+    //       datetimeKst: node.candle_date_time_kst,
+    //       tradePrice: {},
+    //       accTradePrice: {}
+    //     };
+    //     obj.tradePrice[`${baseMarket}`] = tradePrice;
+    //     obj.accTradePrice[`${baseMarket}`] = accTradePrice;
+    //     resultArray.push(obj);
+    //   })
+    // );
 
     for (const market of list) {
       await Bluebird.delay(200);
@@ -214,8 +211,6 @@ class UpbitProcessor implements Exchange {
               return element.datetimeUtc === datetimeUtc;
             });
             if (resultArray[idx]) {
-              // resultArray[idx].tradePrice[`${market}`] = tradePrice;
-              // resultArray[idx].accTradePrice[`${market}`] = accTradePrice;
               _.set(resultArray, `[${idx}].tradePrice.${market}`, tradePrice);
               _.set(resultArray, `[${idx}].accTradePrice.${market}`, accTradePrice);
             }
@@ -235,7 +230,8 @@ class UpbitProcessor implements Exchange {
 
       await Promise.all(
         list.map( async market => {
-          const rate = ( node.tradePrice[market] / firstNode.tradePrice[market] ) - 1;
+          const rate = this.getPriceChangeRate(_.get(node, `tradePrice.${market}`),
+                                               _.get(firstNode, `tradePrice.${market}`));
           dataset.push(rate);
           datasetAcctPrice.push( _.get(node, `accTradePrice.${market}`));
         })
@@ -244,7 +240,6 @@ class UpbitProcessor implements Exchange {
       chartArrayAcctPrice.push( datasetAcctPrice );
     }
 
-    // _.set(result, 'data', resultArray);
     _.set(result, 'column', list);
     _.set(result, 'chart', chartArray);
     _.set(result, 'chartAccPrice', chartArrayAcctPrice);
@@ -271,6 +266,52 @@ class UpbitProcessor implements Exchange {
       default:
     }
     return list;
+  }
+
+  private getPriceChangeRate(currentPrice: number, firstPrice: number) {
+    return ( currentPrice / firstPrice ) - 1;
+  }
+
+  private async setSortedBaseArrayForDays(resultArray: CandleDayItem[],
+                                          baseMarket: string, count?: number, to?: string) {
+    let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesDays( { market: baseMarket, count, to});
+    KRW_BTC_RAW = KRW_BTC_RAW.reverse();
+    await Promise.all(
+      KRW_BTC_RAW.map( async node => {
+        const tradePrice = node.trade_price;
+        const accTradePrice = node.candle_acc_trade_price;
+        const obj: CandleDayItem = {
+          datetimeUtc: node.candle_date_time_utc,
+          datetimeKst: node.candle_date_time_kst,
+          tradePrice: {},
+          accTradePrice: {}
+        };
+        obj.tradePrice[`${baseMarket}`] = tradePrice;
+        obj.accTradePrice[`${baseMarket}`] = accTradePrice;
+        resultArray.push(obj);
+      })
+    );
+  }
+
+  private async setSortedBaseArrayForMinutes(resultArray: CandleMinuteItem[],
+                                             baseMarket: string, unit: number, count?: number, to?: string) {
+    let KRW_BTC_RAW = await UpbitProcessor.getUpbit().candlesMinutes( { unit, market: baseMarket, count, to});
+    KRW_BTC_RAW = KRW_BTC_RAW.reverse();
+    await Promise.all(
+      KRW_BTC_RAW.map( async node => {
+        const tradePrice = node.trade_price;
+        const accTradePrice = node.candle_acc_trade_price;
+        const obj: CandleMinuteItem = {
+          datetimeUtc: node.candle_date_time_utc,
+          datetimeKst: node.candle_date_time_kst,
+          tradePrice: {},
+          accTradePrice: {}
+        };
+        _.set(obj, `tradePrice.${baseMarket}`, tradePrice);
+        _.set(obj, `accTradePrice.${baseMarket}`, accTradePrice);
+        resultArray.push(obj);
+      })
+    );
   }
 
 }
