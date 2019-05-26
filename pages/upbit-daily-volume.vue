@@ -168,7 +168,7 @@ export default {
         response.json().then( resp => {
           const newDataAccPrice = [];
           newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
-          resp.chartAccPrice.forEach( value => {
+          resp.chartAccPriceSum.forEach( value => {
             newDataAccPrice.push(value);
           });
           this.chartDataSquad0Min15AccPrice = newDataAccPrice;
@@ -185,7 +185,7 @@ export default {
         response.json().then( resp => {
           const newDataAccPrice = [];
           newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
-          resp.chartAccPrice.forEach( value => {
+          resp.chartAccPriceSum.forEach( value => {
             newDataAccPrice.push(value);
           });
           this.chartDataSquad1Min15AccPrice = newDataAccPrice;

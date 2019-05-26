@@ -196,7 +196,7 @@ export default {
 
           const newDataAccPrice = [];
           newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
-          resp.chartAccPrice.forEach( value => {
+          resp.chartAccPriceSum.forEach( value => {
             newDataAccPrice.push(value);
           });
           this.chartDataSquad1Min240AccPrice = newDataAccPrice;
@@ -223,7 +223,7 @@ export default {
 
           const newDataAccPrice = [];
           newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
-          resp.chartAccPrice.forEach( value => {
+          resp.chartAccPriceSum.forEach( value => {
             newDataAccPrice.push(value);
           });
           this.chartDataSquad1DaysAccPrice = newDataAccPrice;
