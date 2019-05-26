@@ -17,12 +17,30 @@
       />
 
       <p> </p>
+      <h1> Upbit accumunated price chart - 240 min tick, 2 weeks</h1>
+      <GChart
+      type="LineChart"
+      :data     ="chartDataSquad0Min240AccPrice"
+      :options  ="chartOptsSquad0Min240AccPrice"
+      @ready    ="onChartReadySquad0Min240"
+      />
+
+      <p> </p>
       <h1> Upbit rate trend chart - 1 day tick, 200 days</h1>
       <GChart
       type="LineChart"
       :data     ="chartDataSquad0Days"
       :options  ="chartOptsSquad0Days"
-      @ready="onChartReadySquad0Days"
+      @ready    ="onChartReadySquad0Days"
+      />
+
+      <p> </p>
+      <h1> Upbit accumunated price chart - 1 day tick, 200 days</h1>
+      <GChart
+      type="LineChart"
+      :data     ="chartDataSquad0DaysAccPrice"
+      :options  ="chartOptsSquad0DaysAccPrice"
+      @ready    ="onChartReadySquad0Days"
       />
 
     </v-flex>
@@ -83,6 +101,7 @@ const optionsBase = {
         },
         vAxis: {
           format: 'percent',
+          title: 'rate',
           gridlineColor: "#000000"
           // baselineColor: '#FFFFFF'
           // textStyle:{ color: '#FFFFFFF' }
@@ -95,7 +114,58 @@ const optionsBase = {
         legend: {
           position: 'right',
           textStyle: {
-            fontSize: 10,
+            fontSize: 15,
+            bold: true
+          }
+        }
+      };
+
+
+const optionsBaseVolume = {
+        chart: {
+          title: 'Trend percentage chart',
+          subtitle: ''
+        },
+        textStyle: {
+            color: '#01579b',
+            fontSize: 20,
+            fontName: 'Arial',
+            bold: true,
+            italic: true
+        },
+        titleTextStyle: {
+            color: '#01579b',
+            fontSize: 16,
+            fontName: 'Arial',
+            bold: false,
+            italic: true
+        },
+        backgroundColor: { fill:'#AAAAAA' },
+        height: 500,
+        hAxis: { maxValue: 100 },
+        vAxis: { maxValue: 100 },
+        lineWidth: 1,
+        axes: {
+          x: {
+            0: {side: 'bottom'}
+          },
+          y: {
+            0: {side: 'left'}
+          }
+        },
+        hAxis: {
+          format: 'none',
+          title: 'timeline'
+        },
+        vAxis: {
+          format: 'long',
+          title: 'KRW',
+          gridlineColor: "#000000"
+        },
+        legend: {
+          position: 'right',
+          textStyle: {
+            fontSize: 15,
             bold: true
           }
         }
@@ -122,7 +192,13 @@ export default {
             newData.push(value);
           });
           this.chartDataSquad0Min240 = newData;
-          this.chartOptsSquad0Min240 = options;
+
+          const newDataAccPrice = [];
+          newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
+          resp.chartAccPrice.forEach( value => {
+            newDataAccPrice.push(value);
+          });
+          this.chartDataSquad0Min240AccPrice = newDataAccPrice;
         })
       });
     },
@@ -143,6 +219,13 @@ export default {
           });
           this.chartDataSquad0Days = newData;
           this.chartOptsSquad0Days = options;
+
+          const newDataAccPrice = [];
+          newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
+          resp.chartAccPrice.forEach( value => {
+            newDataAccPrice.push(value);
+          });
+          this.chartDataSquad0DaysAccPrice = newDataAccPrice;
         })
       });
     }
@@ -156,11 +239,24 @@ export default {
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
       chartOptsSquad0Min240: optionsBase,
+      chartDataSquad0Min240AccPrice: [
+        [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad0Min240AccPrice: optionsBaseVolume,
+
+
       chartDataSquad0Days: [
         [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
-      chartOptsSquad0Days: optionsBase
+      chartOptsSquad0Days: optionsBase,
+      chartDataSquad0DaysAccPrice: [
+        [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad0DaysAccPrice: optionsBaseVolume,
+
     }
   }
 }

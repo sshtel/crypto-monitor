@@ -79,7 +79,6 @@ export class RouteUpbit {
     // ALL Markets Minutes Tick
     app.get(`${constant.PATHNAME_EXCHANGE_UPBIT}/currency/:currency/candles/minutes/:unit`, async (req, res) => {
       const { unit, currency } = req.params;
-      console.log(req.query);
       const { count, to, squad } = req.query;
       let base = BaseCurrency.BTC;
       switch (currency) {

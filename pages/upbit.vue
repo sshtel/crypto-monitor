@@ -16,6 +16,14 @@
       @ready    ="onChartReadySquad0Min240"
       />
 
+
+      <GChart
+      type="LineChart"
+      :data     ="chartDataSquad0AccPrice"
+      :options  ="chartOptsSquad0AccPrice"
+      @ready    ="onChartReadySquad0Min240"
+      />
+
       <p> </p>
 
       <GChart
@@ -61,6 +69,14 @@ export default {
           });
           this.chartDataSquad0Min240 = newData;
           this.chartOptsSquad0Min240 = options;
+
+          const newDataAccPrice = [];
+          newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
+          resp.chartAccPrice.forEach( value => {
+            newDataAccPrice.push(value);
+          });
+          this.chartDataSquad0AccPrice = newDataAccPrice;
+          this.chartOptsSquad0AccPrice = options;
         })
       });
     },
@@ -140,6 +156,13 @@ export default {
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
       chartOptsSquad0Min240: this.options,
+      chartDataSquad0AccPrice: [
+        [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad0AccPrice: this.options,
+
+
       chartDataSquad0Days: [
         [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]

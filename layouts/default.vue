@@ -114,7 +114,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Crypto Monitor by Steve Song'
+      title: 'Crypto Monitor'
     }
   }
 }

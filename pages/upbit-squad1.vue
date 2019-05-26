@@ -17,12 +17,30 @@
       @ready    ="onChartReadySquad1Min240"
       />
 
+      <h1> Upbit accumulated price chart (Squad 1)- 240 min tick, 2 weeks</h1>
+      <GChart
+      type="LineChart"
+      :data     ="chartDataSquad1Min240AccPrice"
+      :options  ="chartOptsSquad1Min240AccPrice"
+      @ready    ="onChartReadySquad1Min240"
+      />
+
       <p> </p>
       <h1> Upbit rate trend chart (Squad 1)- 1 day tick, 200 days</h1>
       <GChart
       type="LineChart"
       :data     ="chartDataSquad1Days"
       :options  ="chartOptsSquad1Days"
+      @ready="onChartReadySquad1Days"
+      />
+
+
+      <p> </p>
+      <h1> Upbit accumulated price chart (Squad 1)- 1 day tick, 200 days</h1>
+      <GChart
+      type="LineChart"
+      :data     ="chartDataSquad1DaysAccPrice"
+      :options  ="chartOptsSquad1DaysAccPrice"
       @ready="onChartReadySquad1Days"
       />
 
@@ -96,57 +114,68 @@ const optionsBase = {
         legend: {
           position: 'right',
           textStyle: {
-            fontSize: 10,
+            fontSize: 15,
             bold: true
           }
         }
       };
+
+const optionsBaseVolume = {
+        chart: {
+          title: 'Trend percentage chart',
+          subtitle: ''
+        },
+        textStyle: {
+            color: '#01579b',
+            fontSize: 20,
+            fontName: 'Arial',
+            bold: true,
+            italic: true
+        },
+        titleTextStyle: {
+            color: '#01579b',
+            fontSize: 16,
+            fontName: 'Arial',
+            bold: false,
+            italic: true
+        },
+        backgroundColor: { fill:'#AAAAAA' },
+        height: 500,
+        hAxis: { maxValue: 100 },
+        vAxis: { maxValue: 100 },
+        lineWidth: 1,
+        axes: {
+          x: {
+            0: {side: 'bottom'}
+          },
+          y: {
+            0: {side: 'left'}
+          }
+        },
+        hAxis: {
+          format: 'none',
+          title: 'timeline'
+        },
+        vAxis: {
+          format: 'long',
+          title: 'KRW',
+          gridlineColor: "#000000"
+        },
+        legend: {
+          position: 'right',
+          textStyle: {
+            fontSize: 15,
+            bold: true
+          }
+        }
+      };
+
 
 export default {
   components: {
     GChart
   },
   methods: {
-    onChartReadySquad0Min240 (chart, google) {
-      const protocol = `http://`;
-      const hostname = `${location.host}`;
-      const pathname = `/exchange/upbit/currency/krw/candles/minutes/240?count=100`;
-      const url = `${protocol}${hostname}/api${pathname}`;
-      fetch(url)
-      .then( response => {
-        response.json().then( resp => {
-          let options = this.options;
-          options.chart.title = 'Trend rate chart about 2 weeks - Squad 0'
-          const newData = [];
-          newData.push([ 'DateTime' ].concat(resp.column));
-          resp.chart.forEach( value => {
-            newData.push(value);
-          });
-          this.chartDataSquad0Min240 = newData;
-          this.chartOptsSquad0Min240 = options;
-        })
-      });
-    },
-    onChartReadySquad0Days (chart, google) {
-      const protocol = `http://`;
-      const hostname = `${location.host}`;
-      const pathname = `/exchange/upbit/currency/krw/candles/days?count=200`;
-      const url = `${protocol}${hostname}/api${pathname}`;
-      fetch(url)
-      .then( response => {
-        response.json().then( resp => {
-          let options = this.options;
-          options.chart.title = 'Trend rate chart about 2 weeks - Squad 0'
-          const newData = [];
-          newData.push([ 'DateTime' ].concat(resp.column));
-          resp.chart.forEach( value => {
-            newData.push(value);
-          });
-          this.chartDataSquad0Days = newData;
-          this.chartOptsSquad0Days = options;
-        })
-      });
-    },
     onChartReadySquad1Min240 (chart, google) {
       const protocol = `http://`;
       const hostname = `${location.host}`;
@@ -164,6 +193,13 @@ export default {
           });
           this.chartDataSquad1Min240 = newData;
           this.chartOptsSquad1Min240 = options;
+
+          const newDataAccPrice = [];
+          newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
+          resp.chartAccPrice.forEach( value => {
+            newDataAccPrice.push(value);
+          });
+          this.chartDataSquad1Min240AccPrice = newDataAccPrice;
         })
       });
     },
@@ -184,6 +220,13 @@ export default {
           });
           this.chartDataSquad1Days = newData;
           this.chartOptsSquad1Days = options;
+
+          const newDataAccPrice = [];
+          newDataAccPrice.push([ 'DateTime' ].concat(resp.column));
+          resp.chartAccPrice.forEach( value => {
+            newDataAccPrice.push(value);
+          });
+          this.chartDataSquad1DaysAccPrice = newDataAccPrice;
         })
       });
     }
@@ -191,17 +234,6 @@ export default {
   data () {
     return {
       options: optionsBase,
-      // Array will be automatically processed with visualization.arrayToDataTable function
-      chartDataSquad0Min240: [
-        [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
-        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-      ],
-      chartOptsSquad0Min240: optionsBase,
-      chartDataSquad0Days: [
-        [ 'DateTime', 'BTC', 'ETH', 'XRP', 'EOS', 'TRX', 'XLM', 'ADA', 'BCH', 'LTC', 'ZEC' ],
-        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-      ],
-      chartOptsSquad0Days: optionsBase,
 
       //squad 1
       chartDataSquad1Min240: [
@@ -209,11 +241,24 @@ export default {
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
       chartOptsSquad1Min240: optionsBase,
+
+      chartDataSquad1Min240AccPrice: [
+        [ 'DateTime', '', '', '', '', '', '', '', '', '', '' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad1Min240AccPrice: optionsBaseVolume,
+
       chartDataSquad1Days: [
         [ 'DateTime', '', '', '', '', '', '', '', '', '', '' ],
         ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
-      chartOptsSquad1Days: optionsBase
+      chartOptsSquad1Days: optionsBase,
+
+      chartDataSquad1DaysAccPrice: [
+        [ 'DateTime', '', '', '', '', '', '', '', '', '', '' ],
+        ['', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      ],
+      chartOptsSquad1DaysAccPrice: optionsBaseVolume
     }
   }
 }

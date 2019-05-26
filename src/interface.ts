@@ -1,7 +1,16 @@
-export interface PriceUnit {
+
+export interface CandleMinuteItem {
   datetimeUtc: string;
   datetimeKst: string;
-  tradePrice: {};
+  tradePrice: Object;
+  accTradePrice: Object;
+}
+
+export interface CandleDayItem {
+  datetimeUtc: string;
+  datetimeKst: string;
+  tradePrice: Object;
+  accTradePrice: Object;
 }
 
 export enum BaseCurrency {
